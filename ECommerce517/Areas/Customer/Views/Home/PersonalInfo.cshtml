@@ -1,0 +1,13 @@
+﻿@model PersonalInfoVM
+
+<h1>Name: @Model.Name</h1>
+<h1>Age: @Model.Age</h1>
+<h1>Address: @Model.Balance</h1>
+
+<ul>
+    @foreach (var item in Model.Skills)
+    {
+        <li>@item</li>
+    }
+</ul>
+

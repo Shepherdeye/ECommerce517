@@ -1,0 +1,176 @@
+﻿@model List<Product>
+
+@{
+    ViewData["Title"] = "Home Page";
+
+    const double discount = 50;
+}
+
+
+
+<!-- Header-->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Shop in style</h1>
+            <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
+        </div>
+    </div>
+</header>
+<!-- Filter Section -->
+<section class="py-3 filter-bar">
+    <div class="container">
+        <div class="row" style="background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;">
+            <div class="col-12">
+                <form>
+                    <div class="row">
+                        <!-- Product Name -->
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" placeholder="Product Name" name="ProductName" value="@ViewBag.ProductName">
+                        </div>
+
+                        <!-- Price Range -->
+                        <div class="col-md-2">
+                            <input type="number" class="form-control" placeholder="Min Price" name="MinPrice" value="@ViewBag.MinPrice">
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" class="form-control" placeholder="Max Price" name="MaxPrice" value="@ViewBag.MaxPrice">
+                        </div>
+
+                        <!-- Category -->
+                        <div class="col-md-2">
+                            <select name="CategoryId" class="form-control">
+                                <option>--Select Category--</option>
+                                @foreach (var item in ViewBag.Categories)
+                                {
+                                    @if (@ViewBag.CategoryId == item.Id)
+                                    {
+                                        <option value="@item.Id" selected>@item.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                }
+                                @* @foreach (var item in (List<Category>)ViewData["Categories"]) *@
+                                @* { *@
+                                @*     <option value="@item.Id">@item.Name</option> *@
+                                @* } *@
+                            </select>
+                        </div>
+
+                        <!-- Rating -->
+                        @* <div class="col-md-2"> *@
+                        @*     <select name="rating" class="form-control"> *@
+                        @*         <option value="">Any Rating</option> *@
+                        @*         <option>option 1</option> *@
+                        @*         <option>option 2</option> *@
+                        @*         <option>option 3</option> *@
+                        @*     </select> *@
+                        @* </div> *@
+
+                        <!-- Hot Product Checkbox -->
+                        <div class="col-md-1">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" name="IsHot" value="true" @(ViewBag.IsHot is not null && ViewBag.IsHot ? "checked" : "")>
+                                <label class="form-check-label">Hot</label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-dark w-100">Filter</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Section-->
+<div class="container">
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 mt-5">
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                @if (Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <div class="col mb-5">
+                            <div class="card h-100">
+                                <!-- Sale badge-->
+                                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">@item.Category.Name</div>
+                                @if (item.Discount > discount)
+                                {
+                                    <!-- HOT badge-->
+                                    <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; left: 0.5rem">HOT @item.Discount%</div>
+                                }
+                                <!-- Product image-->
+                                <img class="card-img-top" src="~/images/@item.MainImg" alt="..." />
+                                <!-- Product details-->
+                                <div class="card-body p-4">
+                                    <div class="text-center">
+                                        <!-- Product name-->
+                                        <h5 class="fw-bolder">@item.Name</h5>
+                                        <!-- Product reviews-->
+                                        <div class="d-flex justify-content-center small text-warning mb-2">
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                        </div>
+                                        <!-- Product price-->
+                                        <span class="text-decoration-line-through text-danger">@item.Price.ToString("c")</span>
+                                        @((@item.Price - (item.Price * (item.Discount / 100))).ToString("c"))
+                                    </div>
+                                </div>
+                                <!-- Product actions-->
+                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="/Customer/Home/Details/@item.Id">Details</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <h1 class="display-5">Not Items!!</h1>
+                }
+            </div>
+            <div class="row">
+                <div class="col-12 d-flex justify-content-center">
+                    <nav aria-label="...">
+                        <ul class="pagination">
+                            @if (ViewBag.CurrentPage != 1)
+                            {
+                                <li class="page-item"><a class="page-link" href="/Customer/Home/Index?page=@(ViewBag.CurrentPage-1)&ProductName=@ViewBag.ProductName&MinPrice=@ViewBag.MinPrice&MaxPrice=@ViewBag.MaxPrice&CategoryId=@ViewBag.CategoryId&IsHot=@ViewBag.IsHot">Previous</a></li>
+                            }
+
+                            @for (var i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                if (i == ViewBag.CurrentPage)
+                                {
+                                    <li class="page-item active"><a class="page-link" href="/Customer/Home/Index?page=@i&ProductName=@ViewBag.ProductName&MinPrice=@ViewBag.MinPrice&MaxPrice=@ViewBag.MaxPrice&CategoryId=@ViewBag.CategoryId&IsHot=@ViewBag.IsHot">@i</a></li>
+                                }
+                                else
+                                {
+                                    <li class="page-item"><a class="page-link" href="/Customer/Home/Index?page=@i&ProductName=@ViewBag.ProductName&MinPrice=@ViewBag.MinPrice&MaxPrice=@ViewBag.MaxPrice&CategoryId=@ViewBag.CategoryId&IsHot=@ViewBag.IsHot">@i</a></li>
+                                }
+                            }
+
+                            @if (ViewBag.TotalPages != ViewBag.CurrentPage)
+                            {
+                                <li class="page-item"><a class="page-link" href="/Customer/Home/Index?page=@(ViewBag.CurrentPage+1)&ProductName=@ViewBag.ProductName&MinPrice=@ViewBag.MinPrice&MaxPrice=@ViewBag.MaxPrice&CategoryId=@ViewBag.CategoryId&IsHot=@ViewBag.IsHot">Next</a></li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <partial name="_NotifactionPartial" />
+}

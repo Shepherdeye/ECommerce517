@@ -1,0 +1,186 @@
+﻿@model UpdatePersonalInfoVM
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	<partial name="_NotifactionPartial" />
+}
+
+
+
+<div style="height:100vh" class="container">
+	<div class="row gutters my-3">
+		<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+			<div class="card h-100">
+				<div class="card-body">
+					<div class="account-settings">
+						<div class="user-profile">
+							<div class="user-avatar">
+								<img style="min-height:350px; object-fit:cover" class="img-fluid" src="~/images/profile/@Model.ProfileImage" alt="Maxwell Admin">
+								<div class="text-center">
+									<!-- Image Preview -->
+									<div class="d-flex justify-content-center">
+										<img id="previewImage"
+											 src="/images/default-profile.png"
+											 alt="Profile"
+											 class="rounded-circle border border-2 shadow-sm mb-3"
+											 style="width: 120px; height: 120px; object-fit: cover;">
+									</div>
+
+									<!-- Change Photo Form -->
+									<form asp-action="ChangePhoto" enctype="multipart/form-data" method="post">
+										<div class="d-flex flex-column justify-content-center ">
+											<input type="hidden" name="Id" value="@Model.Id" />
+
+											<div class="my-3">
+												<label class="btn btn-primary btn-sm">
+													Change Profile Picture
+													<input type="file" name="Photo" accept="image/*" hidden onchange="previewProfileImage(event)">
+												</label>
+											</div>
+
+											<button id="save" type="submit" class="btn btn-success btn-sm ">Save</button>
+										</div>
+									</form>
+								</div>
+
+
+							</div>
+							<h5 class="user-name">@Model.Name</h5>
+							<h6 class="user-email">@Model.Email</h6>
+						</div>
+						<div class="about">
+							<h5>About</h5>
+							<p>I'm @Model.Name Full Stack Developer I live in @Model.Street @Model.City @Model.State .</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+			<div class="card h-100">
+				<div class="card-body">
+					<form asp-action="UpdateInfo" method="post">
+						<input type="hidden" name="Id" value="@Model.Id" />
+						<div class="row gutters">
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+								<h6 class="mb-2 text-primary">Personal Details</h6>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label for="fullName">Full Name</label>
+									<input type="text" class="form-control" id="fullName" name="Name" placeholder="Enter full name" value="@Model.Name">
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label for="eMail">Email</label>
+									<input type="email" class="form-control" id="eMail" name="Email" placeholder="Enter email ID" value="@Model.Email">
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label for="phone">Phone</label>
+									<input type="text" class="form-control" id="phone" name="PhoneNumber" placeholder="Enter phone number" value="@Model.PhoneNumber">
+								</div>
+							</div>
+						</div>
+						<div class="row gutters">
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+								<h6 class="mt-3 mb-2 text-primary">Address</h6>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label for="Street">Street</label>
+									<input type="name" class="form-control" id="Street" name="Street" placeholder="Enter Street" value="@Model.Street">
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label for="ciTy">City</label>
+									<input type="name" class="form-control" id="ciTy" name="City" placeholder="Enter City" value="@Model.City">
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label for="sTate">State</label>
+									<input type="text" class="form-control" id="sTate" name="State" placeholder="Enter State" value="@Model.State">
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label for="zIp">Zip Code</label>
+									<input type="text" class="form-control" id="zIp" name="ZipCode" placeholder="Zip Code" value="@Model.ZipCode">
+								</div>
+							</div>
+						</div>
+						<div class="row gutters mt-3">
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+								<div class="text-right">
+									<button type="reset" id="submit" name="submit" class="btn btn-secondary">Cancel</button>
+									<button type="submit" id="submit" name="submit" class="btn btn-primary">Update</button>
+								</div>
+							</div>
+						</div>
+					</form>
+
+					<div class="container mt-4">
+
+						<!-- Toggle Button -->
+						<button class="btn btn-warning btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#changePasswordForm" aria-expanded="false" aria-controls="changePasswordForm">
+							Change Password
+						</button>
+
+						<!-- Collapsible Form -->
+						<div class="collapse mt-3" id="changePasswordForm">
+							<div class="card card-body shadow-sm border">
+								<form asp-action="ChangePassword" method="post">
+									<div class="mb-3">
+										<input type="hidden" name="Id" value="@Model.Id" />
+										<label class="form-label">Current Password</label>
+										<input type="password" name="CurrentPassword" class="form-control" required>
+									</div>
+									<div class="mb-3">
+										<label class="form-label">New Password</label>
+										<input type="password" name="Password" class="form-control" required>
+									</div>
+									<div class="mb-3">
+										<label class="form-label">Confirm New Password</label>
+										<input type="password" name="ConfirmPassword" class="form-control" required>
+									</div>
+									<button type="submit" class="btn btn-success">Save Changes</button>
+								</form>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+	document.addEventListener("DOMContentLoaded", () => {
+		const preview = document.getElementById("previewImage");
+
+		// Hide preview if no default image
+		if (!preview.src || preview.src.includes("default-profile.png")) {
+			preview.style.display = "none";
+			document.getElementById("save").style.display="none";
+		}
+	});
+
+	function previewProfileImage(event) {
+		const preview = document.getElementById("previewImage");
+		const file = event.target.files[0];
+			document.getElementById("save").style.display="block";
+		if (file) {
+			preview.src = URL.createObjectURL(file);
+			preview.style.display = "block";
+		
+		}
+	}
+</script>
