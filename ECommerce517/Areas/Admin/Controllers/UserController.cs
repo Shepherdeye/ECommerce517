@@ -68,7 +68,7 @@ namespace ECommerce517.Areas.Admin.Controllers
 
             //chcek for superAdmin=> 
 
-            if((User.IsInRole(SD.AdminArea) || User.IsInRole(SD.AdminArea)) && adminUserCreate.UserRole==SD.SuperAdminRole)
+            if((User.IsInRole(SD.AdminArea) || User.IsInRole(SD.CompanyRole)) && adminUserCreate.UserRole==SD.SuperAdminRole)
             {
                 TempData["error-notification"] = "Only super admin can set Super admin ";
 
