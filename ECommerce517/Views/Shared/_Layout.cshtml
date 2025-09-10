@@ -41,7 +41,7 @@
                     <ul class="w-50 navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 d-flex  gap-3 justify-content-end mr-2 align-items-center">
                         @if ( User is not  null && User.Identity.IsAuthenticated)
                         {
-                            <li><a class="dropdown-item" href="/Identity/Profile/Index">Welcome  <span class="p-2"><i class="bi-person-fill me-1 text-lg">@User.Identity.Name</i></span></a></li>
+                            <li><a class="dropdown-item" href="/Identity/Profile/Index">Welcome  <span class="p-2"><i class="bi-person-fill me-1 text-lg">@User.Identity.Name </i></span></a></li>
                         <li><a class="bg-danger rounded text-light p-1  dropdown-item" href="/Identity/Account/Logout">Logout</a></li>
                         }
                         else

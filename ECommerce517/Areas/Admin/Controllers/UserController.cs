@@ -14,7 +14,7 @@ namespace ECommerce517.Areas.Admin.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserController(UserManager<ApplicationUser> userManager,RoleManager<IdentityRole> roleManager)
+        public UserController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -41,26 +41,26 @@ namespace ECommerce517.Areas.Admin.Controllers
             {
                 var errors = ModelState.Values.SelectMany(e => e.Errors.Select(e => e.ErrorMessage));
 
-                TempData["error-notification"] = string.Join(", ",errors);
+                TempData["error-notification"] = string.Join(", ", errors);
                 return View(adminUserCreate);
             }
 
-            ApplicationUser user =new ApplicationUser()
+            ApplicationUser user = new ApplicationUser()
             {
-                Name=adminUserCreate.Name,
-                UserName=adminUserCreate.UserName,
-                Email=adminUserCreate.Email,
-                EmailConfirmed=adminUserCreate.ConfirmEmail
-                
+                Name = adminUserCreate.Name,
+                UserName = adminUserCreate.UserName,
+                Email = adminUserCreate.Email,
+                EmailConfirmed = adminUserCreate.ConfirmEmail
+
             };
 
-            var result = await _userManager.CreateAsync(user,adminUserCreate.Password);
+            var result = await _userManager.CreateAsync(user, adminUserCreate.Password);
 
             // addRole
 
             if (!result.Succeeded)
             {
-               var createErrors= result.Errors.Select(e => e.Description);
+                var createErrors = result.Errors.Select(e => e.Description);
                 TempData["error-notification"] = string.Join(", ", createErrors);
                 return View(adminUserCreate);
             }
@@ -68,14 +68,14 @@ namespace ECommerce517.Areas.Admin.Controllers
 
             //chcek for superAdmin=> 
 
-            if((User.IsInRole(SD.AdminArea) || User.IsInRole(SD.CompanyRole)) && adminUserCreate.UserRole==SD.SuperAdminRole)
+            if ((User.IsInRole(SD.AdminArea) || User.IsInRole(SD.CompanyRole)) && adminUserCreate.UserRole == SD.SuperAdminRole)
             {
                 TempData["error-notification"] = "Only super admin can set Super admin ";
 
                 return View(adminUserCreate);
             }
 
-             var roleResult=   await _userManager.AddToRoleAsync(user,adminUserCreate.UserRole);
+            var roleResult = await _userManager.AddToRoleAsync(user, adminUserCreate.UserRole);
 
 
 
@@ -87,10 +87,25 @@ namespace ECommerce517.Areas.Admin.Controllers
 
             }
 
-            
+
 
             TempData["success-notification"] = "User Created Successfully !";
             return RedirectToAction(nameof(Index));
+        }
+
+
+        public async Task<IActionResult> BlockUnBlock(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user is null)
+            {
+                return NotFound();
+            }
+          
+            user.LockoutEnabled=!user.LockoutEnabled;
+           await _userManager.UpdateAsync(user);
+            return RedirectToAction(nameof(Index));
+
         }
     }
 }
