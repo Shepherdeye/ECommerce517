@@ -44,14 +44,14 @@
                             <td>
                                 <a href="/Admin/User/Edit/@item.Id" type="button" class="btn btn-warning">Edit</a>
                                @if(item.LockoutEnabled){
-                                <a href="/Admin/User/Delete/@item.Id"
+                                <a href="/Admin/User/BlockUnBlock/@item.Id"
                                    class="btn btn-danger btn-delete"
                                     data-id="@item.Id">Lock</a>
                                 }
                                 else
                                 {
-                                    <a href="/Admin/User/Delete/@item.Id"
-                                       class="btn btn-danger btn-delete"
+                                    <a href="/Admin/User/BlockUnBlock/@item.Id"
+                                       class="btn btn-primary btn-delete"
                                        data-id="@item.Id">Un lock</a>
                                 }
                             </td>
